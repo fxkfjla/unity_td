@@ -21,7 +21,7 @@ public class Enemy : MonoBehaviour
         // vector is normalized to indicate only the direction, multiplying by deltaTime to maintain constant speed independent of frames passed   
         transform.Translate(direction.normalized * speed * Time.deltaTime, Space.World);
 
-        if(Vector2.Distance(transform.position, target.position) <= 0.2f)
+        if(Vector2.Distance(transform.position, target.position) <= 0.025f)
         {
             GetNextWaypoint();
         }
