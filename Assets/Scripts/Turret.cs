@@ -5,51 +5,80 @@ using UnityEngine;
 public class Turret : MonoBehaviour
 {
     private Transform target;
+
     public float range = 2f;
     public string enemyTag = "Enemy";
+
     public Transform partToRotate;
+    public float turnSpeed = 10f;
 
-    void Start()
+    void UpdateTargetNearest()
     {
-        InvokeRepeating("UpdateTarget", 0f, 0.5f);
-    }
-
-    void UpdateTarget()
-    {
-        GameObject[] enemies = GameObject.FindGameObjectsWithTag(enemyTag);
-        float shortestDistance = Mathf.Infinity;
-        GameObject nearestEnemy = null;
-
-        foreach(GameObject enemy in enemies)
+        if(target == null)
         {
-            float distanceToEnemy = Vector3.Distance(transform.position, enemy.transform.position);
-            if (distanceToEnemy < shortestDistance)
+            GameObject[] enemies = GameObject.FindGameObjectsWithTag(enemyTag);
+
+            float distanceToTarget = Mathf.Infinity;
+
+            foreach(GameObject enemy in enemies)
             {
-                shortestDistance = distanceToEnemy;
-                nearestEnemy = enemy;
-            }
-        }
+                float distanceToEnemy = Vector3.Distance(transform.position, enemy.transform.position);
 
-        if(nearestEnemy != null && shortestDistance <= range)
-        {
-            target = nearestEnemy.transform;
+                if (distanceToEnemy < distanceToTarget && distanceToEnemy <= range)
+                {
+                    distanceToTarget = distanceToEnemy;
+                    target = enemy.transform;
+                }
+            }
         }
         else
         {
-            target = null;
-        }
+            float distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
 
+            if(distanceToTarget >= range)
+                target = null;
+        }
+    } 
+
+    void UpdateTargetFirst()
+    {
+        if(target == null)
+        {
+            GameObject[] enemies = GameObject.FindGameObjectsWithTag(enemyTag);
+
+            foreach(GameObject enemy in enemies)
+            {
+                float distanceToEnemy = Vector3.Distance(transform.position, enemy.transform.position);
+
+                if(distanceToEnemy < range)
+                {
+                    target = enemy.transform;
+                    break;
+                }
+            }
+        }
+        else
+        {
+            float distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
+
+            if(distanceToTarget >= range)
+                target = null;
+        } 
     }
 
     void Update()
     {
-        if (target == null)
-            return;
+        // UpdateTargetNearest();
+        UpdateTargetFirst();
 
-        Vector3 dir = target.position - transform.position;
-        Quaternion lookRotation = Quaternion.LookRotation(dir);
-        Vector3 rotation = lookRotation.eulerAngles;
-        partToRotate.rotation = Quaternion.Euler(90f, rotation.y, 0f);
+        if(target != null)
+        {
+            // dodac komentarze
+            Vector3 dir = target.position - transform.position;
+            Quaternion lookRotation = Quaternion.LookRotation(dir);
+            Vector3 rotation = Quaternion.Lerp(partToRotate.rotation, lookRotation, Time.deltaTime * turnSpeed).eulerAngles;
+            partToRotate.rotation = Quaternion.Euler(0f, rotation.y, 0f);
+        }
     }
 
     void OnDrawGizmosSelected()

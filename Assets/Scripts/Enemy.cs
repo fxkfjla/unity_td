@@ -16,12 +16,12 @@ public class Enemy : MonoBehaviour
     void Update()
     {
         // direction = destination - enemy current position
-        Vector2 direction = target.position - transform.position; 
+        Vector3 direction = target.position - transform.position; 
         // Moves the transform in the direction and distance of translation relative to space
         // vector is normalized to indicate only the direction, multiplying by deltaTime to maintain constant speed independent of frames passed   
         transform.Translate(direction.normalized * speed * Time.deltaTime, Space.World);
 
-        if(Vector2.Distance(transform.position, target.position) <= 0.025f)
+        if(Vector3.Distance(transform.position, target.position) <= 0.025f)
         {
             GetNextWaypoint();
         }
