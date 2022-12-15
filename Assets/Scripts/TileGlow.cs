@@ -12,15 +12,22 @@ public class TileGlow : MonoBehaviour
 
     private MeshRenderer meshRenderer;
     private Material[] defaultMaterials;
+
+    private BuildManager buildManager;
     
     void Start()
     {
         meshRenderer = GetComponent<MeshRenderer>();
         defaultMaterials = meshRenderer.materials;
+
+        buildManager = BuildManager.instance;
     }
 
     void OnMouseEnter()
     {
+        if(buildManager.GetTurretToBuild() == null)
+            return;
+
         if(gameObject.tag == "Buildable")
         {
             Material[] materials = meshRenderer.materials;
@@ -31,19 +38,26 @@ public class TileGlow : MonoBehaviour
 
     void OnMouseExit()
     {
+        if(buildManager.GetTurretToBuild() == null)
+            return;
+
         if(gameObject.tag == "Buildable")
             meshRenderer.materials = defaultMaterials;  
     }
 
     void OnMouseDown()
     {
+        if(buildManager.GetTurretToBuild() == null)
+            return;
+
         if(gameObject.tag == "Buildable")
         {
             // Build a turret
-            GameObject turretToBuild = BuildManager.instance.GetTurretToBuild();
+            GameObject turretToBuild = buildManager.GetTurretToBuild();
             turret = (GameObject)Instantiate(turretToBuild, transform.position + positionOffset, transform.rotation);
             gameObject.tag = "NotBuildable";
             meshRenderer.materials = defaultMaterials;  
+            buildManager.SetTurretToBuild(null);
         }
         else
         {
