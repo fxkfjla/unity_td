@@ -7,6 +7,7 @@ public class Turret : MonoBehaviour
     private Transform target;
 
     [Header("Attributes")]
+    public int cost = 100;
     public float range = 2f;
     public float fireRate = 1f;
     private float fireCountDown = 0f;

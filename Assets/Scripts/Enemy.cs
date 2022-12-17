@@ -3,6 +3,8 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     public float speed = 1f;
+    public int health = 100;
+    public int givesMoney = 20;
 
     private Transform target;
     private int waypointIndex = 0;
@@ -11,6 +13,22 @@ public class Enemy : MonoBehaviour
     {
         // assign first waypoint as a target
         target = Waypoints.waypoints[0];
+    }
+
+    public void TakeDamage(int amount)
+    {
+        health -= amount;
+
+        if(health <= 0)
+        {
+            Die();
+        }
+    }
+
+    void Die()
+    {
+        PlayerStats.money += givesMoney;
+        Destroy(gameObject);
     }
 
     void Update()
@@ -31,6 +49,7 @@ public class Enemy : MonoBehaviour
     {
         if(waypointIndex >= Waypoints.waypoints.Length - 1)
         {
+            --PlayerStats.lives;
             Destroy(gameObject);
             return;
         }

@@ -5,6 +5,7 @@ public class Bullet : MonoBehaviour
     private Transform target;
 
     public float speed = 20f;
+    public int damage = 50;
 
     public void setTarget(Transform target)
     {
@@ -14,7 +15,10 @@ public class Bullet : MonoBehaviour
     void HitTarget()
     {
         Destroy(gameObject);
-        Destroy(target.gameObject);
+        Enemy enemy = target.GetComponent<Enemy>();
+
+        if(enemy != null)
+            enemy.TakeDamage(damage);
     }
 
     void Update()

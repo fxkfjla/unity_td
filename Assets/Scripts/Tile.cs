@@ -28,6 +28,9 @@ public class Tile : MonoBehaviour
     {
         if(buildManager.CanBuildOn(this))
             MakeGlow();
+
+        if(buildManager.CanSellOn(this))
+            MakeGlow();
     }
 
     void OnMouseExit()
@@ -38,11 +41,22 @@ public class Tile : MonoBehaviour
     void OnMouseDown()
     {
         if(buildManager.CanBuildOn(this))
+        {
             buildManager.BuildTurretOn(this);
-        else
+        }
+        else if(buildManager.CanSellOn(this))
+        {
+            buildManager.SellTurretOn(this);
+        }
+        else if(!buildManager.CanBuildOn(this) && buildManager.TurretSelected())
         {
             Debug.Log("Can't build here!");
             buildManager.SetTurretToBuild(null);
+        }
+        else if(!buildManager.CanSellOn(this) && buildManager.SellSelected())
+        {
+            Debug.Log("No turret to sell!");
+            buildManager.SetSellTurret(false);
         }
     }
 

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8911623439830496702}
   - component: {fileID: -4301057895557268952}
   m_Layer: 0
-  m_Name: Enemy
+  m_Name: Blue Enemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -63,7 +63,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: e2410364da25e3f048f223a423d03f40, type: 2}
+  - {fileID: 2100000, guid: d754998a6d1c9414f93856cbcf8d9e95, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -110,4 +110,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04e3aefef5f247eaf90baf4989078424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 2
+  speed: 3
+  health: 2
+  givesMoney: 40

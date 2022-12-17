@@ -5,13 +5,34 @@ using TMPro;
 
 public class WaveSpawner : MonoBehaviour
 {
-    public Transform enemyPrefab;
+    // singleton and access build manager without referance
+    public static WaveSpawner instance; 
+
+    public Transform redEnemyPrefab;
+    public Transform blueEnemyPrefab;
     public Transform spawnPoint;
     public TextMeshProUGUI waveCountdownText;
     public TextMeshProUGUI waveIndexText;
     public float timeBetweenWaves = 5f;
     private float countdown = 2f; // time before it spawns the first wave
     private int waveIndex = 0;
+
+   void Awake()
+    {
+        if(instance != null)
+        {
+            Debug.LogError("More than one WaveSpawner in the scene!");
+            return;
+        }
+
+        instance = this;
+    }
+
+    public void SpawnNextWave()
+    {
+        StartCoroutine(SpawnWave());
+        countdown = timeBetweenWaves;
+    }
 
     void Update()
     {
@@ -33,13 +54,27 @@ public class WaveSpawner : MonoBehaviour
         waveIndex++;
         for(int i = 0; i < waveIndex; i++)
         {
-            SpawnEnemy();
+            SpawnRedEnemy();
             yield return new WaitForSeconds(0.5f);
+        }
+
+        if(waveIndex > 9)
+        {
+            for(int i = 0; i < waveIndex - 9; i++)
+            {
+                SpawnBlueEnemy();
+                yield return new WaitForSeconds(0.5f);
+            }
         }
     }
 
-    void SpawnEnemy()
+    void SpawnRedEnemy()
     {
-        Instantiate(enemyPrefab, spawnPoint.position, spawnPoint.rotation); // clones the enemyPrefab and returns the clone
+        Instantiate(redEnemyPrefab, spawnPoint.position, spawnPoint.rotation); // clones the enemyPrefab and returns the clone
+    }
+
+    void SpawnBlueEnemy()
+    {
+        Instantiate(blueEnemyPrefab, spawnPoint.position, spawnPoint.rotation); // clones the enemyPrefab and returns the clone
     }
 }

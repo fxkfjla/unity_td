@@ -6,6 +6,7 @@ public class BuildManager : MonoBehaviour
     public static BuildManager instance; 
 
     private TurretBlueprint turretToBuild;
+    private bool sellTurret = false;
 
    void Awake()
     {
@@ -47,13 +48,47 @@ public class BuildManager : MonoBehaviour
         tile.MakeNotGlow();
     }
 
+    public void SellTurretOn(Tile tile)
+    {
+        PlayerStats.money += (int)(tile.turret.GetComponent<Turret>().cost / 2);
+
+        Destroy(tile.turret.gameObject);
+        tile.turret = null;
+        // player is now able to build on this tile
+        tile.gameObject.tag = "Buildable";
+        // tile no longer needs to glow
+        tile.MakeNotGlow();
+        // we are no longer selling turrets
+        SetSellTurret(false);
+    }
+
     public void SetTurretToBuild(TurretBlueprint turret)
     {
         turretToBuild = turret;
     }
 
+    public void SetSellTurret(bool expr)
+    {
+        sellTurret = expr;
+    }
+
+    public bool TurretSelected()
+    {
+        return turretToBuild != null;
+    }
+
+    public bool SellSelected()
+    {
+        return sellTurret;
+    }
+
     public bool CanBuildOn(Tile tile)
     {
         return turretToBuild != null && tile.gameObject.tag == "Buildable";
+    }
+
+    public bool CanSellOn(Tile tile)
+    {
+        return turretToBuild == null && tile.gameObject.tag == "NotBuildable" && tile.turret != null && sellTurret == true;
     }
 }
