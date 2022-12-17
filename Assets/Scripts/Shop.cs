@@ -3,6 +3,8 @@ using UnityEngine;
 public class Shop : MonoBehaviour
 {
     public TurretBlueprint standardTurret;
+    public TurretBlueprint missileLauncher;
+
 
     private BuildManager buildManager;
     private WaveSpawner waveSpawner;
@@ -16,6 +18,11 @@ public class Shop : MonoBehaviour
     public void SelectStandardTurret()
     {
         buildManager.SetTurretToBuild(standardTurret);
+    }
+
+    public void SelectMissileLauncher()
+    {
+        buildManager.SetTurretToBuild(missileLauncher);
     }
 
     public void SelectSellTurret()

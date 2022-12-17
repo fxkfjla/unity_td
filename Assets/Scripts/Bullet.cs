@@ -5,6 +5,7 @@ public class Bullet : MonoBehaviour
     private Transform target;
 
     public float speed = 20f;
+    public float explosionRadius = 0f;
     public int damage = 50;
 
     public void setTarget(Transform target)
@@ -17,8 +18,28 @@ public class Bullet : MonoBehaviour
         Destroy(gameObject);
         Enemy enemy = target.GetComponent<Enemy>();
 
+        if (explosionRadius > 0)
+        {
+            Explode();
+        } else 
+        {
+            Destroy(enemy.gameObject);
+        }
         if(enemy != null)
             enemy.TakeDamage(damage);
+    }
+
+    void Explode()
+    {
+        Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius);
+        foreach (Collider collider in colliders)
+        {
+            if (collider.tag == "Enemy")
+            {
+                Destroy(collider.transform.gameObject);
+            }
+        }
+
     }
 
     void Update()
@@ -40,5 +61,13 @@ public class Bullet : MonoBehaviour
         }
 
         transform.Translate(direction.normalized * distance, Space.World);
+        transform.LookAt(target);
     }
+
+    void OnDrawGizmosSelected ()
+	{
+		Gizmos.color = Color.red;
+		Gizmos.DrawWireSphere(transform.position, explosionRadius);
+	}
+
 }
